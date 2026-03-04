@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopify SEO Tool - Meta Titles & Descriptions</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0B0F1A;
+            --bg-card: #131825;
+            --bg-card-hover: #1A2035;
+            --bg-surface: #0E1220;
+            --bg-input: #1A2035;
+            --accent: #4F8CFF;
+            --accent-glow: rgba(79, 140, 255, 0.15);
+            --accent-green: #34D399;
+            --accent-orange: #FB923C;
+            --accent-red: #F87171;
+            --accent-purple: #A78BFA;
+            --accent-pink: #F472B6;
+            --text-primary: #E8ECF4;
+            --text-secondary: #8892A8;
+            --text-muted: #4A5568;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(79,140,255,0.25);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* ── Topbar ──────────────────────────────────── */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 15, 26, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .topbar h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .topbar h1 span {
+            color: var(--accent);
+        }
+
+        /* ── Connexion ──────────────────────────────── */
+        .config-section {
+            max-width: 1400px;
+            margin: 24px auto;
+            padding: 0 32px;
+        }
+
+        .config-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input, .form-group select {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--accent);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* ── Boutons ─────────────────────────────────── */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #3d7ae6;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-success {
+            background: var(--accent-green);
+            color: #0B0F1A;
+        }
+
+        .btn-success:hover {
+            background: #2bc48a;
+        }
+
+        .btn-success:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ── Toolbar ─────────────────────────────────── */
+        .toolbar {
+            max-width: 1400px;
+            margin: 16px auto;
+            padding: 0 32px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .toolbar .search-input {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 14px;
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            outline: none;
+            width: 300px;
+            transition: border-color 0.2s;
+        }
+
+        .toolbar .search-input:focus {
+            border-color: var(--accent);
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chip {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .chip.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .chip:hover:not(.active) {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .toolbar-right {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .stats-badge {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .stats-badge strong {
+            color: var(--accent);
+        }
+
+        /* ── Tableau ─────────────────────────────────── */
+        .table-container {
+            max-width: 1400px;
+            margin: 16px auto;
+            padding: 0 32px 32px;
+        }
+
+        .table-wrap {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: var(--bg-surface);
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 65px;
+            z-index: 10;
+        }
+
+        thead th:first-child {
+            width: 40px;
+            text-align: center;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+
+        tbody tr:hover {
+            background: var(--bg-card-hover);
+        }
+
+        tbody tr.modified {
+            border-left: 3px solid var(--accent-orange);
+        }
+
+        tbody tr.updated-success {
+            border-left: 3px solid var(--accent-green);
+        }
+
+        tbody tr.updated-error {
+            border-left: 3px solid var(--accent-red);
+        }
+
+        tbody td {
+            padding: 12px 16px;
+            font-size: 14px;
+            vertical-align: top;
+        }
+
+        tbody td:first-child {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /* Checkbox custom */
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        /* Type badge */
+        .type-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .type-badge.product { background: rgba(79,140,255,0.15); color: var(--accent); }
+        .type-badge.collection { background: rgba(167,139,250,0.15); color: var(--accent-purple); }
+        .type-badge.page { background: rgba(52,211,153,0.15); color: var(--accent-green); }
+        .type-badge.article { background: rgba(244,114,182,0.15); color: var(--accent-pink); }
+
+        /* Champs éditables */
+        .editable-cell {
+            position: relative;
+        }
+
+        .editable-cell textarea {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 10px;
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s;
+            min-height: 38px;
+        }
+
+        .editable-cell textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .editable-cell textarea.modified {
+            border-color: var(--accent-orange);
+        }
+
+        .char-count {
+            font-size: 11px;
+            text-align: right;
+            margin-top: 3px;
+            color: var(--text-muted);
+        }
+
+        .char-count.warn { color: var(--accent-orange); }
+        .char-count.over { color: var(--accent-red); }
+
+        .title-cell {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .handle-cell {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        /* ── Status indicators ──────────────────────── */
+        .status-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+        }
+
+        .status-icon.success { color: var(--accent-green); }
+        .status-icon.error { color: var(--accent-red); }
+
+        /* ── Progress bar ────────────────────────────── */
+        .progress-overlay {
+            display: none;
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 32px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            z-index: 200;
+            min-width: 400px;
+            text-align: center;
+        }
+
+        .progress-overlay.visible { display: block; }
+
+        .progress-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .progress-bar-bg {
+            background: var(--bg-input);
+            border-radius: 8px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-purple));
+            border-radius: 8px;
+            transition: width 0.3s;
+            width: 0%;
+        }
+
+        .progress-stats {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* ── Empty state ─────────────────────────────── */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        .empty-state p {
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .empty-state .sub {
+            font-size: 13px;
+        }
+
+        /* ── Toast ───────────────────────────────────── */
+        .toast {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px 20px;
+            box-shadow: var(--shadow);
+            z-index: 300;
+            transform: translateX(120%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 360px;
+            font-size: 14px;
+        }
+
+        .toast.visible { transform: translateX(0); }
+        .toast.success { border-left: 3px solid var(--accent-green); }
+        .toast.error { border-left: 3px solid var(--accent-red); }
+        .toast.info { border-left: 3px solid var(--accent); }
+
+        /* ── Responsive ──────────────────────────────── */
+        @media (max-width: 768px) {
+            .topbar { padding: 12px 16px; }
+            .config-section, .toolbar, .table-container { padding-left: 16px; padding-right: 16px; }
+            .config-card { flex-direction: column; }
+            .form-group { min-width: 100%; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .toolbar .search-input { width: 100%; }
+            .toolbar-right { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="topbar-left">
+            <div class="topbar-logo">S</div>
+            <h1>Shopify <span>SEO Tool</span></h1>
+        </div>
+    </div>
+
+    <!-- Configuration / Connexion -->
+    <div class="config-section">
+        <div class="config-card">
+            <div class="form-group">
+                <label>Nom du store Shopify</label>
+                <input type="text" id="storeInput" placeholder="mon-store (sans .myshopify.com)">
+            </div>
+            <div class="form-group">
+                <label>Access Token</label>
+                <input type="password" id="tokenInput" placeholder="shpat_xxxxxxxxxxxxx">
+            </div>
+            <div class="form-group" style="flex: 0.5;">
+                <label>Type de ressource</label>
+                <select id="typeSelect">
+                    <option value="all">Tout</option>
+                    <option value="products">Produits</option>
+                    <option value="collections">Collections</option>
+                    <option value="pages">Pages</option>
+                    <option value="articles">Articles</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" id="loadBtn" onclick="loadResources()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                Charger
+            </button>
+        </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar" id="toolbar" style="display: none;">
+        <input type="text" class="search-input" id="searchInput" placeholder="Rechercher par titre ou handle..." oninput="filterTable()">
+        <div class="filter-chips">
+            <span class="chip active" data-filter="all" onclick="setFilter('all', this)">Tout</span>
+            <span class="chip" data-filter="product" onclick="setFilter('product', this)">Produits</span>
+            <span class="chip" data-filter="collection" onclick="setFilter('collection', this)">Collections</span>
+            <span class="chip" data-filter="page" onclick="setFilter('page', this)">Pages</span>
+            <span class="chip" data-filter="article" onclick="setFilter('article', this)">Articles</span>
+        </div>
+        <div class="toolbar-right">
+            <span class="stats-badge" id="statsBadge"><strong>0</strong> ressources</span>
+            <button class="btn btn-outline" onclick="selectAll()">Tout sélectionner</button>
+            <button class="btn btn-outline" onclick="selectModified()">Sélectionner modifiés</button>
+            <button class="btn btn-success" id="updateBtn" onclick="updateSelected()" disabled>
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                Mettre à jour (<span id="selectedCount">0</span>)
+            </button>
+        </div>
+    </div>
+
+    <!-- Tableau -->
+    <div class="table-container">
+        <div class="table-wrap" id="tableWrap">
+            <div class="empty-state" id="emptyState">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <p>Connectez votre boutique Shopify</p>
+                <p class="sub">Entrez votre store et access token, puis cliquez sur Charger</p>
+            </div>
+            <table id="resourceTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)"></th>
+                        <th>Type</th>
+                        <th>Titre</th>
+                        <th style="width: 25%;">Meta Title</th>
+                        <th style="width: 30%;">Meta Description</th>
+                        <th style="width: 60px;">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="resourceBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Progress overlay -->
+    <div class="progress-overlay" id="progressOverlay">
+        <div class="progress-text" id="progressText">Mise à jour en cours...</div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-stats" id="progressStats"></div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        let resources = [];
+        let currentFilter = 'all';
+        let originalData = {};
+
+        // ── Persistence localStorage ─────────────────────────
+        function saveConfig() {
+            const store = document.getElementById('storeInput').value;
+            const token = document.getElementById('tokenInput').value;
+            if (store) localStorage.setItem('shopify_store', store);
+            if (token) localStorage.setItem('shopify_token', token);
+        }
+
+        function loadConfig() {
+            const store = localStorage.getItem('shopify_store');
+            const token = localStorage.getItem('shopify_token');
+            if (store) document.getElementById('storeInput').value = store;
+            if (token) document.getElementById('tokenInput').value = token;
+        }
+
+        // ── Toast ────────────────────────────────────────────
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} visible`;
+            setTimeout(() => toast.classList.remove('visible'), 4000);
+        }
+
+        // ── Charger les ressources ───────────────────────────
+        async function loadResources() {
+            const store = document.getElementById('storeInput').value.trim();
+            const token = document.getElementById('tokenInput').value.trim();
+            const type = document.getElementById('typeSelect').value;
+
+            if (!store || !token) {
+                showToast('Veuillez remplir le store et l\'access token', 'error');
+                return;
+            }
+
+            saveConfig();
+
+            const btn = document.getElementById('loadBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="animation: spin 1s linear infinite;"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Chargement...';
+
+            try {
+                const resp = await fetch(`${API_BASE}/api/resources?store=${encodeURIComponent(store)}&token=${encodeURIComponent(token)}&type=${type}`);
+                const data = await resp.json();
+
+                if (!resp.ok) {
+                    throw new Error(data.error || 'Erreur API');
+                }
+
+                resources = data.resources;
+                originalData = {};
+                resources.forEach(r => {
+                    originalData[r.id] = {
+                        meta_title: r.meta_title,
+                        meta_description: r.meta_description
+                    };
+                });
+
+                renderTable();
+                document.getElementById('toolbar').style.display = 'flex';
+                document.getElementById('emptyState').style.display = 'none';
+                document.getElementById('resourceTable').style.display = '';
+                updateStats();
+                showToast(`${data.count} ressources chargées`, 'success');
+
+            } catch (err) {
+                showToast(`Erreur : ${err.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Charger';
+            }
+        }
+
+        // ── Rendu tableau ────────────────────────────────────
+        function renderTable() {
+            const tbody = document.getElementById('resourceBody');
+            const search = (document.getElementById('searchInput').value || '').toLowerCase();
+
+            const filtered = resources.filter(r => {
+                if (currentFilter !== 'all' && r.type !== currentFilter) return false;
+                if (search) {
+                    return r.title.toLowerCase().includes(search)
+                        || r.handle.toLowerCase().includes(search)
+                        || (r.meta_title || '').toLowerCase().includes(search);
+                }
+                return true;
+            });
+
+            tbody.innerHTML = filtered.map(r => {
+                const isModified = hasChanged(r);
+                const titleLen = (r.meta_title || '').length;
+                const descLen = (r.meta_description || '').length;
+                const titleClass = titleLen > 60 ? 'over' : titleLen > 50 ? 'warn' : '';
+                const descClass = descLen > 160 ? 'over' : descLen > 140 ? 'warn' : '';
+                const rowClass = r._status === 'success' ? 'updated-success'
+                    : r._status === 'error' ? 'updated-error'
+                    : isModified ? 'modified' : '';
+
+                return `<tr class="${rowClass}" data-id="${r.id}" data-type="${r.type}">
+                    <td><input type="checkbox" class="row-check" data-id="${r.id}" onchange="updateSelectedCount()"></td>
+                    <td><span class="type-badge ${r.type}">${typeLabel(r.type)}</span></td>
+                    <td>
+                        <div class="title-cell">${escHtml(r.title)}</div>
+                        <div class="handle-cell">/${r.handle}</div>
+                        ${r.blog_title ? `<div class="handle-cell" style="color:var(--accent-pink);">${escHtml(r.blog_title)}</div>` : ''}
+                    </td>
+                    <td class="editable-cell">
+                        <textarea rows="2" data-id="${r.id}" data-field="meta_title" oninput="onFieldChange(this)">${escHtml(r.meta_title || '')}</textarea>
+                        <div class="char-count ${titleClass}">${titleLen}/60</div>
+                    </td>
+                    <td class="editable-cell">
+                        <textarea rows="2" data-id="${r.id}" data-field="meta_description" oninput="onFieldChange(this)">${escHtml(r.meta_description || '')}</textarea>
+                        <div class="char-count ${descClass}">${descLen}/160</div>
+                    </td>
+                    <td>
+                        ${r._status === 'success' ? '<span class="status-icon success">&#10003;</span>'
+                        : r._status === 'error' ? '<span class="status-icon error" title="' + escHtml(r._error || '') + '">&#10007;</span>'
+                        : ''}
+                    </td>
+                </tr>`;
+            }).join('');
+
+            updateStats();
+        }
+
+        function typeLabel(t) {
+            const labels = { product: 'Produit', collection: 'Collection', page: 'Page', article: 'Article' };
+            return labels[t] || t;
+        }
+
+        function escHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // ── Détection des modifications ──────────────────────
+        function hasChanged(r) {
+            const orig = originalData[r.id];
+            if (!orig) return false;
+            return r.meta_title !== orig.meta_title || r.meta_description !== orig.meta_description;
+        }
+
+        function onFieldChange(textarea) {
+            const id = textarea.dataset.id;
+            const field = textarea.dataset.field;
+            const value = textarea.value;
+            const resource = resources.find(r => r.id === id);
+            if (resource) {
+                resource[field] = value;
+                resource._status = null;
+            }
+
+            // Update char count
+            const counter = textarea.nextElementSibling;
+            const len = value.length;
+            const max = field === 'meta_title' ? 60 : 160;
+            const warnAt = field === 'meta_title' ? 50 : 140;
+            counter.textContent = `${len}/${max}`;
+            counter.className = `char-count ${len > max ? 'over' : len > warnAt ? 'warn' : ''}`;
+
+            // Mark modified
+            const orig = originalData[id];
+            if (orig && value !== orig[field]) {
+                textarea.classList.add('modified');
+            } else {
+                textarea.classList.remove('modified');
+            }
+
+            // Update row class
+            const row = textarea.closest('tr');
+            if (hasChanged(resource)) {
+                row.classList.add('modified');
+                row.classList.remove('updated-success', 'updated-error');
+            } else {
+                row.classList.remove('modified');
+            }
+        }
+
+        // ── Sélection ────────────────────────────────────────
+        function toggleSelectAll(master) {
+            document.querySelectorAll('.row-check').forEach(cb => {
+                cb.checked = master.checked;
+            });
+            updateSelectedCount();
+        }
+
+        function selectAll() {
+            document.querySelectorAll('.row-check').forEach(cb => cb.checked = true);
+            document.getElementById('selectAllCheckbox').checked = true;
+            updateSelectedCount();
+        }
+
+        function selectModified() {
+            document.querySelectorAll('.row-check').forEach(cb => {
+                const id = cb.dataset.id;
+                const r = resources.find(res => res.id === id);
+                cb.checked = r && hasChanged(r);
+            });
+            updateSelectedCount();
+        }
+
+        function updateSelectedCount() {
+            const count = document.querySelectorAll('.row-check:checked').length;
+            document.getElementById('selectedCount').textContent = count;
+            document.getElementById('updateBtn').disabled = count === 0;
+        }
+
+        function updateStats() {
+            const visible = document.querySelectorAll('#resourceBody tr').length;
+            const total = resources.length;
+            const modified = resources.filter(r => hasChanged(r)).length;
+            let text = `<strong>${visible}</strong> affichées / ${total} total`;
+            if (modified > 0) text += ` — <strong style="color:var(--accent-orange)">${modified}</strong> modifiées`;
+            document.getElementById('statsBadge').innerHTML = text;
+        }
+
+        // ── Filtres ──────────────────────────────────────────
+        function setFilter(filter, el) {
+            currentFilter = filter;
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            renderTable();
+        }
+
+        function filterTable() {
+            renderTable();
+        }
+
+        // ── Mise à jour ──────────────────────────────────────
+        async function updateSelected() {
+            const store = document.getElementById('storeInput').value.trim();
+            const token = document.getElementById('tokenInput').value.trim();
+            const checkedIds = [...document.querySelectorAll('.row-check:checked')].map(cb => cb.dataset.id);
+
+            if (checkedIds.length === 0) {
+                showToast('Aucune ressource sélectionnée', 'error');
+                return;
+            }
+
+            const updates = checkedIds.map(id => {
+                const r = resources.find(res => res.id === id);
+                return {
+                    id: r.id,
+                    type: r.type,
+                    meta_title: r.meta_title,
+                    meta_description: r.meta_description
+                };
+            });
+
+            // Show progress
+            const overlay = document.getElementById('progressOverlay');
+            const fill = document.getElementById('progressFill');
+            const text = document.getElementById('progressText');
+            const stats = document.getElementById('progressStats');
+            overlay.classList.add('visible');
+            fill.style.width = '0%';
+            text.textContent = `Mise à jour de ${updates.length} ressource(s)...`;
+            stats.textContent = '';
+
+            document.getElementById('updateBtn').disabled = true;
+
+            try {
+                const resp = await fetch(`${API_BASE}/api/update`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ store, token, updates })
+                });
+                const data = await resp.json();
+
+                if (!resp.ok) {
+                    throw new Error(data.error || 'Erreur API');
+                }
+
+                // Update resource statuses
+                data.results.forEach(result => {
+                    const r = resources.find(res => res.id === result.id);
+                    if (r) {
+                        r._status = result.status;
+                        r._error = result.message || '';
+                        if (result.status === 'success') {
+                            originalData[r.id] = {
+                                meta_title: r.meta_title,
+                                meta_description: r.meta_description
+                            };
+                        }
+                    }
+                });
+
+                fill.style.width = '100%';
+                const s = data.summary;
+                text.textContent = 'Mise à jour terminée !';
+                stats.textContent = `${s.success} succès — ${s.errors} erreur(s)`;
+
+                renderTable();
+                showToast(`${s.success} ressource(s) mise(s) à jour`, s.errors > 0 ? 'error' : 'success');
+
+            } catch (err) {
+                showToast(`Erreur : ${err.message}`, 'error');
+            } finally {
+                setTimeout(() => {
+                    overlay.classList.remove('visible');
+                }, 3000);
+                updateSelectedCount();
+            }
+        }
+
+        // ── Init ─────────────────────────────────────────────
+        loadConfig();
+
+        // CSS animation for spinner
+        const styleEl = document.createElement('style');
+        styleEl.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+        document.head.appendChild(styleEl);
+    </script>
+</body>
+</html>
